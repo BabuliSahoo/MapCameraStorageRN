@@ -1,4 +1,4 @@
-import { Alert, Button, View, image,StyleSheet,Text } from "react-native";
+import { Alert, View, Image,StyleSheet,Text } from "react-native";
 import {
   launchCameraAsync,
   useCameraPermissions,
@@ -6,9 +6,11 @@ import {
 } from "expo-image-picker";
 import { useState } from "react";
 import { Colors } from "../../constants/colors";
+import OutlinedButton from "../UI/OutlineButton";
+import OutlineButton from "../UI/OutlineButton";
 
 function ImagePicker() {
-  const [pickedImage, setPickedImage] = useState();
+  const [capturedImage, setCapturedImage] = useState();
   const [cameraPermissionInformation, requestPermission] =
     useCameraPermissions();
 
@@ -40,20 +42,22 @@ function ImagePicker() {
       aspect: [16, 9],
       quality: 0.5,
     });
-    console.log("Image Info ::  ",image);
-    setPickedImage(image.uri);
-    console.log("Image Info ::  ",pickedImage);
+
+    let uri = image.assets?.[0]?.uri.toString();
+    console.log("Image Info Before ::  ",uri);
+    setCapturedImage(uri); // Check here why It's not saving image uri. 
+    console.log("Image Info After ::  ",capturedImage);
   }
 
   let imagePreview = <Text>No image taken yet.</Text>;
-  if (pickedImage) {
-    imagePreview = <Image styles = {styles.image} source={{ uri: pickedImage }} />;
+  if (capturedImage) {
+    imagePreview = <Image styles = {styles.image} source={{ uri: capturedImage }} />;
   }
 
   return (
     <View>
       <View style={styles.imageView}>{imagePreview}</View>
-      <Button title="Take Image" onPress={takeImageHandler} />
+      <OutlineButton icon="camera" onPress={takeImageHandler}> Take Image</OutlineButton>
     </View>
   );
 }
